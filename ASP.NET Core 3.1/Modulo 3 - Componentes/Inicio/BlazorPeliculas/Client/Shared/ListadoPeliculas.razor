@@ -1,0 +1,31 @@
+﻿@inject IJSRuntime js
+
+<input type="checkbox" @bind="MostrarBotones" />
+
+<ListadoGenerico Listado="Peliculas">
+    <HayRegistros Context="pelicula">
+        <PeliculaIndividual Pelicula="pelicula"
+                            MostrarBotones="MostrarBotones"
+                            EliminarPelicula="EliminarPelícula" />
+    </HayRegistros>
+
+</ListadoGenerico>
+
+
+@code {
+
+    [Parameter] public List<Pelicula> Peliculas { get; set; }
+
+    bool MostrarBotones = true;
+
+    async Task EliminarPelícula(Pelicula pelicula)
+    {
+        var confirmado = await js.Confirm($"¿Desea borrar la película {pelicula.Titulo}?");
+        if (confirmado)
+        {
+            Peliculas.Remove(pelicula);
+            Console.WriteLine($"Se ha eliminado la película {pelicula.Titulo}");
+        }
+
+    }
+}
